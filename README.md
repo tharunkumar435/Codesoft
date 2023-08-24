@@ -1,82 +1,67 @@
 import tkinter as tk
-from tkinter import messagebox
-
-def add_task():
-    task = entry_task.get()
-    if task:
-        listbox_tasks.insert(tk.END, task)
-        entry_task.delete(0, tk.END)
-    else:
-        messagebox.showwarning("Warning", "Please enter a task.")
-
-def delete_task():
+calculation=""
+def add_to_calculation(symbol):
+    global calculation
+    calculation += str(symbol)
+    text_result.delete(1.0, "end")
+    text_result.insert(1.0, calculation)
+def evaluate_calculation():
+    global calculation
     try:
-        selected_index = listbox_tasks.curselection()[0]
-        listbox_tasks.delete(selected_index)
-    except IndexError:
-        messagebox.showwarning("Warning", "Please select a task to delete.")
+        calculation=str(eval(calculation))
+        text_result.delete(1.0, "end")
+        text_result.insert(1.0, calculation)        
+    except:
+        clear_field()
+        text_result.insert(1.0, "Error")
+        
+def clear_field():
+    global calculation
+    calculation=""
+    text_result.delete(1.0, "end")
+    text_result.insert(1.0, calculation) 
+    
 
-def edit_task():
-    try:
-        selected_index = listbox_tasks.curselection()[0]
-        task = listbox_tasks.get(selected_index)
-        entry_task.delete(0, tk.END)
-        entry_task.insert(tk.END, task)
-        listbox_tasks.delete(selected_index)
-    except IndexError:
-        messagebox.showwarning("Warning", "Please select a task to edit.")
+root=tk.Tk()
+root.geometry("300x275")
 
-def save_tasks():
-    with open("tasks.txt", "w") as file:
-        tasks = listbox_tasks.get(0, tk.END)
-        for task in tasks:
-            file.write(task + "\n")
+text_result=tk.Text(root, height=2, width=16, font=("Arial", 24))
+text_result.grid(columnspan=5)
 
-def load_tasks():
-    try:
-        with open("tasks.txt", "r") as file:
-            tasks = file.readlines()
-            for task in tasks:
-                listbox_tasks.insert(tk.END, task.strip())
-    except FileNotFoundError:
-        pass
-
-root = tk.Tk()
-root.title("To-Do List")
-
-frame_input = tk.Frame(root)
-frame_input.pack(pady=10)
-
-entry_task = tk.Entry(frame_input, width=50)
-entry_task.pack(side=tk.LEFT, padx=5)
-
-button_add_task = tk.Button(frame_input, text="Add Task", command=add_task)
-button_add_task.pack(side=tk.LEFT, padx=5)
-
-frame_tasks = tk.Frame(root)
-frame_tasks.pack()
-
-listbox_tasks = tk.Listbox(frame_tasks, width=50, height=10)
-listbox_tasks.pack(side=tk.LEFT, fill=tk.BOTH)
-
-scrollbar_tasks = tk.Scrollbar(frame_tasks)
-scrollbar_tasks.pack(side=tk.RIGHT, fill=tk.Y)
-
-listbox_tasks.config(yscrollcommand=scrollbar_tasks.set)
-scrollbar_tasks.config(command=listbox_tasks.yview)
-
-frame_buttons = tk.Frame(root)
-frame_buttons.pack(pady=5)
-
-button_delete_task = tk.Button(frame_buttons, text="Delete Task", command=delete_task)
-button_delete_task.pack(side=tk.LEFT, padx=5)
-
-button_edit_task = tk.Button(frame_buttons, text="Edit Task", command=edit_task)
-button_edit_task.pack(side=tk.LEFT, padx=5)
-
-button_save_tasks = tk.Button(root, text="Save Tasks", command=save_tasks)
-button_save_tasks.pack(pady=5)
-
-load_tasks()
-
+btn_1 = tk.Button(root, text="1", command=lambda: add_to_calculation(1), width=5, font=("Arial", 14))
+btn_1.grid(row=2, column=1)
+btn_2 = tk.Button(root, text="2", command=lambda: add_to_calculation(2), width=5, font=("Arial", 14))
+btn_2.grid(row=2, column=2)
+btn_3 = tk.Button(root, text="3", command=lambda: add_to_calculation(3), width=5, font=("Arial", 14))
+btn_3.grid(row=2, column=3)
+btn_4 = tk.Button(root, text="4", command=lambda: add_to_calculation(4), width=5, font=("Arial", 14))
+btn_4.grid(row=3, column=1)
+btn_5 = tk.Button(root, text="5", command=lambda: add_to_calculation(5), width=5, font=("Arial", 14))
+btn_5.grid(row=3, column=2)
+btn_6 = tk.Button(root, text="6", command=lambda: add_to_calculation(6), width=5, font=("Arial", 14))
+btn_6.grid(row=3, column=3)
+btn_7 = tk.Button(root, text="7", command=lambda: add_to_calculation(7), width=5, font=("Arial", 14))
+btn_7.grid(row=4, column=1)
+btn_8 = tk.Button(root, text="8", command=lambda: add_to_calculation(8), width=5, font=("Arial", 14))
+btn_8.grid(row=4, column=2)
+btn_9 = tk.Button(root, text="9", command=lambda: add_to_calculation(9), width=5, font=("Arial", 14))
+btn_9.grid(row=4, column=3)
+btn_0 = tk.Button(root, text="0", command=lambda: add_to_calculation(0), width=5, font=("Arial", 14))
+btn_0.grid(row=5, column=2)
+btn_plus = tk.Button(root, text="+", command=lambda: add_to_calculation("+"), width=5, font=("Arial", 14))
+btn_plus.grid(row=2, column=4)
+btn_minus = tk.Button(root, text="-", command=lambda: add_to_calculation("-"), width=5, font=("Arial", 14))
+btn_minus.grid(row=3, column=4)
+btn_mul = tk.Button(root, text="*", command=lambda: add_to_calculation("*"), width=5, font=("Arial", 14))
+btn_mul.grid(row=4, column=4)
+btn_div = tk.Button(root, text="/", command=lambda: add_to_calculation("/"), width=5, font=("Arial", 14))
+btn_div.grid(row=5, column=4)
+btn_open = tk.Button(root, text="(", command=lambda: add_to_calculation("("), width=5, font=("Arial", 14))
+btn_open.grid(row=5, column=1)
+btn_close = tk.Button(root, text=")", command=lambda: add_to_calculation(")"), width=5, font=("Arial", 14))
+btn_close.grid(row=5, column=3)
+btn_clear = tk.Button(root, text="C", command=clear_field, width=11, font=("Arial", 14))
+btn_clear.grid(row=6, column=1, columnspan=2)
+btn_equals = tk.Button(root, text="=", command=evaluate_calculation, width=11, font=("Arial", 14))
+btn_equals.grid(row=6, column=3, columnspan=2)
 root.mainloop()
